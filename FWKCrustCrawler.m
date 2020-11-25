@@ -11,9 +11,14 @@ theta2=deg2rad(40);
 theta3=deg2rad(50);
 
 %% Links measurements for Crust crawler in Fusion
-l_1 = 173.6000;   %mm
-l_2 = 219.80;   %mm
-l_3 = 277.8;    %mm
+%Fusion craustcrawler
+l_1_fusion = 173.6000;   %mm
+l_2_fusion = 219.80;   %mm
+l_3_fusion = 277.8;    %mm
+%Real life crustcrawler
+l_1 = 194;   %mm
+l_2 = 219;   %mm
+l_3 = 261;    %mm
 
 %% DH parametre
 T01=TDH(0       ,   0    ,    0     ,theta1     );
