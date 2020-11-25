@@ -6,9 +6,15 @@
 clear
 syms theta1 theta2 theta3 theta4 theta5 theta6 
 
-l_1 = 173.6000;   %mm
-l_2 = 219.80;   %mm
-l_3 = 277.8;    %mm
+%% Links measurements for Crust crawler in Fusion
+%Fusion craustcrawler
+l_1_fusion = 173.6000;   %mm
+l_2_fusion = 219.80;   %mm
+l_3_fusion = 277.8;    %mm
+%Real life crustcrawler
+l_1 = 194;   %mm
+l_2 = 219;   %mm
+l_3 = 261;    %mm
 
 %% Setup of data
 %Enter end effector coordinates and orientation.
