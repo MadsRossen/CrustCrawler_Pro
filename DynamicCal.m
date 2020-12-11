@@ -11,13 +11,13 @@ syms thd1 thd2 thd3
 syms thdd1 thdd2 thdd3
 syms thd12 thd13 thd23
 syms thd1sq thd2sq thd3sq
+syms tau1 tau2 tau3
 
 %% Gravity vector
-
 g_vec = [
     0
     0
-    g];
+    -g];
 
 %% Inertia tensors
 IC_1 = [
@@ -66,7 +66,7 @@ e3 = [
     0
     1];
 
-%% Positions vectors
+%% Position vectors
 Pv1 = R_01 * (l1 * e3);
 Pv2 = R_02 * (l2 * e1);
 
@@ -168,8 +168,13 @@ MassMatrix = [
     simplify(diff(tau_3,thdd3))
     ]
 
-% subs function is used to substitute ex thd1*thd2 to thd12, for partial
-% differentiation
+%Print Mass Matrix to .txt file
+fid = fopen('MassMatrix.txt', 'wt');
+fprintf(fid, '%s\n', char(MassMatrix));
+fclose(fid);
+
+% "subs" function is used to substitute ex thd1*thd2 to thd12, for partial
+% differentiation in MATLAB
 t1_thdthd_sub=...
     subs(tau_1,[thd1*thd2,thd1*thd2,thd2*thd3],[thd12,thd13,thd23]);
 t2_thdthd_sub=...
@@ -192,8 +197,8 @@ CoriolisMatrix = [
     simplify(diff(t3_thdthd_sub,thd23))
     ]
 
-% subs function is used to substitute ex thd1^2 to thd1sq, for partial
-% differentiation
+% "subs" function is used to substitute ex thd1^2 to thd1sq, for partial
+% differentiation in MATLAB
 t1_thdsq_sub=subs(tau_1,[thd1^2,thd2^2,thd3^2],[thd1sq,thd2sq,thd3sq]);
 t2_thdsq_sub=subs(tau_2,[thd1^2,thd2^2,thd3^2],[thd1sq,thd2sq,thd3sq]);
 t3_thdsq_sub=subs(tau_3,[thd1^2,thd2^2,thd3^2],[thd1sq,thd2sq,thd3sq]);
@@ -219,6 +224,11 @@ thdsqVector = [thd1^2;thd2^2;thd3^2];
 % VelocityVector
 VelocityVector = CoriolisMatrix*thdthdVector+CentrifugalMatrix*thdsqVector
 
+%Print VelocityVector to .txt file
+fid = fopen('VelocityVector.txt', 'wt');
+fprintf(fid, '%s\n', char(VelocityVector));
+fclose(fid);
+
 % GravityVector
 GravityVector_no_g  = [
     simplify(diff(tau_1,g));
@@ -226,6 +236,11 @@ GravityVector_no_g  = [
     simplify(diff(tau_3,g))
     ];
 GravityVector = g*GravityVector_no_g
+
+%Print GravityVector_no_g to .txt file
+fid = fopen('GravityVector_no_g.txt', 'wt');
+fprintf(fid, '%s\n', char(GravityVector_no_g));
+fclose(fid);
 
 %% Statespace equation
 jointAngleAccVector = [
@@ -238,10 +253,13 @@ jointAngleAccVector = [
 tauVector = simplify(MassMatrix*jointAngleAccVector+VelocityVector...
     +GravityVector)
 
+
 %Forward Dynamics Equation
-jointAngleAccVector = simplify(inv(MassMatrix)*(tauVector-...
-    (VelocityVector)+GravityVector))
-
-
-
-
+tauVector = [
+    tau1;
+    tau2;
+    tau3
+    ];
+    
+jointAngleAccVector = inv(MassMatrix)*(tauVector-...
+    (VelocityVector)+GravityVector)
