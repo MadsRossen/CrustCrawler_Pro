@@ -1,0 +1,44 @@
+%PID control gains analysis
+%Gruppe 364 3. semester 2020
+
+%Settling time
+Ts = 0.250
+
+%Damping ratio
+Dr = -(log(0.00031/100))/...
+    (sqrt(pi^2+(log(0.00031/100))^2))
+
+%Natrual frquency
+Omg2 = -log(0.02*sqrt(1-Dr^2)) / (Dr * Ts)
+
+%Kv (differential action)
+Kv = 2 * Dr * Omg2
+
+%Kp (proportional action)
+Kp = Omg2^2
+
+%Closed loop tranfer function
+num = [Kp];
+den = [1 Kv Kp];
+ClosedLoopTf = tf(num,den)
+
+%Open loop tranfer function
+num = [Kp];
+den = [1 Kv 0];
+OpenLoopTf = tf(num,den) 
+
+% Plot step responsem open loop bodeplot and poles
+subplot(1,3,3) 
+step(ClosedLoopTf)
+
+subplot(1,3,2)
+margin(OpenLoopTf)
+
+subplot(1,3,1)
+pzmap(OpenLoopTf)
+
+%System parametres
+stepinfo(ClosedLoopTf)
+SP=1;                   %input value, if you put 1 then is the same as step(sys)
+[y,t]=step(SP*ClosedLoopTf);      %get the response of the system to a step with amplitude SP
+steady_state_error=abs(SP-y(end))  %get the steady state error
